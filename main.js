@@ -9,7 +9,6 @@ const getComputerChoice = () => {
     return choices[computerChoice]
 }
 
-
 // Uma arrow function pra receber e verificar a escolha do player
 const getHumanChoice = () => {
     let humanChoice = prompt('Rock(R), Paper(P) or Scissors(S)')
@@ -20,7 +19,6 @@ const getHumanChoice = () => {
     }
     return humanChoice
 }
-
 
 // Uma arrow function para comparar as respostas do computador e usuário e devolver uma mensagem na tela, adicionando +1 ponto ao vencedor da rodada
 const playRound = (choice, computerChoice) => {
