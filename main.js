@@ -1,3 +1,11 @@
+const optionsMenu = document.querySelector(".options")
+const optionsRobotRock = document.querySelector('.robot-rock')
+const optionsRobotPaper = document.querySelector('.robot-paper')
+const optionsRobotScissors = document.querySelector('.robot-scissors')
+const playerPoints = document.querySelector('#player-points')
+const robotPoints = document.querySelector('#robot-points')
+const resultText = document.querySelector(".result")
+
 // Define as escolhas padrões possiveis para a máquina e a pontuação inicial dela e do usuario
 const choices = ["R", "P", "S"] 
 let humanScore = 0
@@ -9,59 +17,85 @@ const getComputerChoice = () => {
     return choices[computerChoice]
 }
 
-// Uma arrow function pra receber e verificar a escolha do player
-const getHumanChoice = () => {
-    let humanChoice = prompt('Rock(R), Paper(P) or Scissors(S)')
-
-    // Caso a escolha for incorreta ele entra em um loop
-    while (humanChoice !== "R" && humanChoice !== "P" && humanChoice !== "S") {
-        humanChoice = prompt('Rock(R), Paper(P) or Scissors(S)')
-    }
-    return humanChoice
-}
-
-// Uma arrow function para comparar as respostas do computador e usuário e devolver uma mensagem na tela, adicionando +1 ponto ao vencedor da rodada
-const playRound = (choice, computerChoice) => {
-    if (choice === computerChoice) {
-        alert('You two tied')
-    } else if (choice == "R" && computerChoice == "P") {
-        alert('Paper rolls stone! You lost')
-        computerScore++
-    } else if (choice == "P" && computerChoice == "R") {
-        alert('Paper rolls stone! You win')
-        humanScore++
-    } else if (choice == "R" && computerChoice == "S") {
-        alert('Rock destroys scissors! You win')
-        humanScore++
-    } else if (choice == "S" && computerChoice == "R") {
-        alert('Rock destroys scissors! You lost')
-        computerScore++
-    } else if (choice == "P" && computerChoice == "S") {
-        alert("Scissors cut paper! You lost")
-        computerScore++
-    } else if (choice == "S" && computerChoice == "P") {
-        alert("Scissors cut paper! You win")
-        humanScore++
+const displayRobotChoice = (robotchoice) => {
+    optionsRobotRock.style.display = "none"
+    optionsRobotPaper.style.display = 'none'
+    optionsRobotScissors.style.display = 'none'
+    switch(robotchoice) {
+        case 'R':
+            optionsRobotRock.style.display = "block"
+            break
+        case 'P':
+            optionsRobotPaper.style.display = 'block'
+            break
+        case "S":
+            optionsRobotScissors.style.display = 'block'
+            break
     }
 }
 
-// A função que ativa o jogo com 5 partidas, e devolve um resultado geral
 function playgame() {
-    // Deixa o jogador em um loop de 5 partidas
-    for (let a = 0; a < 5; a++) {
-        let choiceHuman = getHumanChoice()
-        let choiceComputer = getComputerChoice()
-        playRound(choiceHuman, choiceComputer)
-    }
-    if (humanScore == computerScore) {
-        alert(`You two tied: ${humanScore} x ${computerScore}`)
-    } else if (humanScore < computerScore) {
-        alert(`You lost: ${humanScore} x ${computerScore}`)
-    } else if (humanScore > computerScore) {
-        alert(`You won: ${humanScore} x ${computerScore}`)
+    if (humanScore >= 10) {
+        resultText.style.color = 'red'
+        resultText.textContent = `You won: ${humanScore} x ${computerScore}`
+        computerScore = 0
+        humanScore = 0
+        playerPoints.textContent = humanScore
+        robotPoints.textContent = computerScore
+    } else if (computerScore >= 10) {
+        resultText.style.color = 'red'
+        resultText.textContent = `You lost: ${humanScore} x ${computerScore}`
+        computerScore = 0
+        humanScore = 0
+        playerPoints.textContent = humanScore
+        robotPoints.textContent = computerScore
     }
 }
 
-// Começa o jogo
-alert('Welcome to the Rock, Paper, Scissors game, let start!')
-playgame()
+const playRound = (choice, computerChoice) => {
+    displayRobotChoice(computerChoice)
+    if (choice === computerChoice) {
+        resultText.textContent = 'You two tied'
+    } else if (choice === "R" && computerChoice === "P") {
+        resultText.textContent = 'Paper rolls stone! You lost'
+        computerScore++
+        robotPoints.textContent = computerScore
+    } else if (choice === "P" && computerChoice === "R") {
+        resultText.textContent = 'Paper rolls stone! You win'
+        humanScore++
+        playerPoints.textContent = humanScore
+    } else if (choice === "R" && computerChoice === "S") {
+        resultText.textContent = 'Rock destroys scissors! You win'
+        humanScore++
+        playerPoints.textContent = humanScore
+    } else if (choice === "S" && computerChoice === "R") {
+        resultText.textContent = 'Rock destroys scissors! You lost'
+        computerScore++
+        robotPoints.textContent = computerScore
+    } else if (choice === "P" && computerChoice === "S") {
+        resultText.textContent = "Scissors cut paper! You lost"
+        computerScore++
+        robotPoints.textContent = computerScore
+    } else if (choice === "S" && computerChoice === "P") {
+        resultText.textContent = "Scissors cut paper! You win"
+        humanScore++
+        playerPoints.textContent = humanScore
+    }
+    playgame()
+}
+
+optionsMenu.addEventListener('click', (e) => {
+    const target = e.target
+    resultText.style.color = 'black'
+    switch(target.className) {
+        case "rock":
+            playRound('R', getComputerChoice())
+            break;
+        case "paper":
+            playRound('P', getComputerChoice())
+            break;
+        case "scissors":
+            playRound("S", getComputerChoice())
+            break;
+    }
+})
